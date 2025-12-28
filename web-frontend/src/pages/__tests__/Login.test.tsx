@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 // Assuming the component exists in the original project at:
-// /home/ubuntu/finova_project/web-frontend/src/pages/Login.tsx
+// /FinovaBank/web-frontend/src/pages/Login.tsx
 // Adjust the import path if necessary.
-// import Login from '../../../../finova_project/web-frontend/src/pages/Login';
+// import Login from '../../../../FinovaBank/web-frontend/src/pages/Login';
 
 // Placeholder component for testing structure
 const Login: React.FC = () => {

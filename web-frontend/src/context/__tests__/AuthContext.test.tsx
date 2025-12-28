@@ -3,9 +3,9 @@ import { render, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 // Assuming the context exists in the original project at:
-// /home/ubuntu/finova_project/web-frontend/src/context/AuthContext.tsx
+// /FinovaBank/web-frontend/src/context/AuthContext.tsx
 // Adjust the import path if necessary.
-// import { AuthProvider, useAuth } from '../../../../finova_project/web-frontend/src/context/AuthContext';
+// import { AuthProvider, useAuth } from '../../../../FinovaBank/web-frontend/src/context/AuthContext';
 
 // --- Placeholder AuthContext Implementation --- START ---
 interface AuthContextType {
