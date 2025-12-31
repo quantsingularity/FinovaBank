@@ -1,107 +1,83 @@
-# FinovaBank - Digital Banking Platform
+# FinovaBank Documentation
 
-## Overview
-
-**FinovaBank** is a comprehensive digital banking platform designed to provide core banking services such as account management, transaction processing, and user notifications. This project utilizes a modern tech stack with a microservices architecture, enabling scalability, security, and high availability. The platform aims to meet the needs of users by offering flexible, efficient, and secure banking solutions.
-
-> **Note**: FinovaBank is currently under active development. Features and functionalities are being added and improved continuously to enhance user experience.
+Welcome to the comprehensive documentation for FinovaBank - a modern digital banking platform combining traditional banking services with AI and blockchain technologies.
 
 ## Table of Contents
 
-- [Architecture](#architecture)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Infrastructure](#infrastructure)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
+1. [Installation Guide](INSTALLATION.md)
+2. [Usage Guide](USAGE.md)
+3. [API Reference](API.md)
+4. [CLI Reference](CLI.md)
+5. [Configuration](CONFIGURATION.md)
+6. [Feature Matrix](FEATURE_MATRIX.md)
+7. [Architecture](ARCHITECTURE.md)
+8. [Examples](examples/)
+9. [Contributing](CONTRIBUTING.md)
+10. [Troubleshooting](TROUBLESHOOTING.md)
 
-## Architecture
+## Quick Start
 
-FinovaBank is built using a microservices architecture with services running in Docker containers. Each core banking feature (such as account management, transaction processing, notifications, etc.) has been implemented as an independent microservice.
+FinovaBank is a microservices-based digital banking platform built with Java Spring Boot backend services, React/React Native frontends, and Python AI services.
 
-The following microservices are included:
+### Three-Step Quickstart
 
-- **API Gateway**: Handles incoming requests and routes them to the appropriate services.
-- **Account Management**: Manages customer accounts, including balance and account details.
-- **Transaction Service**: Processes financial transactions between accounts.
-- **Notification Service**: Sends notifications to users regarding account activities.
-- **User Profile Service**: Manages user profiles and personal details.
+1. **Clone and setup environment**
 
-## Features
-
-- **Secure Account Management**: Create and manage user accounts with encrypted data storage.
-- **Transaction Processing**: Fund transfer between accounts with secure authorization.
-- **Notifications**: Alerts for account activity via a dedicated notification service.
-- **Infrastructure as Code**: Automated cloud infrastructure setup using Terraform.
-- **CI/CD Integration**: Automated testing and deployment through GitHub Actions.
-- **Monitoring**: Uses Prometheus and Grafana for metrics and visualization.
-
-## Tech Stack
-
-- **Backend**: Node.js, Express
-- **Cloud Provider**: AWS
-- **Infrastructure as Code**: Terraform
-- **Database**: MongoDB, PostgreSQL
-- **Containerization**: Docker, Kubernetes
-- **CI/CD**: GitHub Actions, Jenkins
-- **Monitoring**: Prometheus, Grafana
-- **Testing**: Jest
-
-## Installation
-
-To get started with FinovaBank locally, follow these steps:
-
-1. **Clone the repository**:
-
-   ```sh
+   ```bash
    git clone https://github.com/abrar2030/FinovaBank.git
    cd FinovaBank
+   cp .env.example .env
    ```
 
-2. **Build Docker images** for all services:
+2. **Start with Docker Compose**
 
-   ```sh
-   ./docker-build-and-compose.sh
-   ```
-
-3. **Start services using Docker Compose**:
-
-   ```sh
+   ```bash
    docker-compose up -d
    ```
 
-4. **Access the platform**:
-   The API Gateway will be available at `http://localhost:8002`.
+3. **Access the platform**
+   - Web UI: http://localhost:3000
+   - API Gateway: http://localhost:8002
+   - Eureka Dashboard: http://localhost:8001
+   - Grafana Monitoring: http://localhost:3001
 
-## Usage
+## What is FinovaBank?
 
-- **API Documentation**: For detailed API endpoints and examples, refer to [API_DOCS.md](documentation/api-doc).
-- **Managing Services**: Run `./manage-services.sh` to start, stop, or restart any of the microservices.
-- **Testing**: To run unit tests, execute:
-  ```sh
-  npm test
-  ```
+FinovaBank is a comprehensive digital banking platform featuring:
 
-## Infrastructure
+- **Core Banking Services**: Account management, transactions, loans, and payments
+- **AI-Powered Features**: Fraud detection, financial recommendations, risk assessment, and analytics
+- **Blockchain Integration**: Immutable transaction records and smart contracts
+- **Microservices Architecture**: 12+ independent services with service discovery
+- **Modern Frontend**: React web app and React Native mobile app
+- **DevOps Ready**: Docker, Kubernetes, CI/CD with GitHub Actions
 
-The infrastructure of FinovaBank is managed using Terraform scripts, which provision cloud resources on AWS. Kubernetes is used for orchestrating the Docker containers to provide scalability.
+## Documentation Structure
 
-- **Deployment**: The Kubernetes manifests are available in the `infrastructure/kubernetes` directory.
-- **Monitoring**: The system metrics can be monitored through Prometheus, with dashboards set up in Grafana (`monitoring/grafana`).
+- **[INSTALLATION.md](INSTALLATION.md)** - Complete installation instructions for all platforms
+- **[USAGE.md](USAGE.md)** - How to use the platform (CLI, API, UI)
+- **[API.md](API.md)** - Complete REST API reference
+- **[CLI.md](CLI.md)** - Command-line interface reference
+- **[CONFIGURATION.md](CONFIGURATION.md)** - Environment variables and configuration files
+- **[FEATURE_MATRIX.md](FEATURE_MATRIX.md)** - Feature overview table
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and design
+- **[EXAMPLES/](examples/)** - Working code examples
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
 
-## Contributing
+## Key Technologies
 
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new feature branch (`git checkout -b feature/new-feature`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature/new-feature`).
-5. Create a new Pull Request.
+| Layer             | Technologies                                             |
+| ----------------- | -------------------------------------------------------- |
+| Backend           | Java 17, Spring Boot 2.7.14, Spring Cloud                |
+| Frontend          | React 18.3.1, TypeScript, Material-UI, React Native 0.72 |
+| AI/ML             | Python 3.8+, Flask, scikit-learn, pandas, numpy          |
+| Databases         | PostgreSQL, MongoDB, Redis, H2 (dev)                     |
+| Infrastructure    | Docker, Kubernetes, Terraform, Ansible                   |
+| Monitoring        | Prometheus, Grafana                                      |
+| Message Queue     | Kafka, RabbitMQ                                          |
+| Service Discovery | Netflix Eureka                                           |
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.

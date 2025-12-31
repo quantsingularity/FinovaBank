@@ -1,163 +1,491 @@
-# FinovaBank Architecture Documentation
+# Architecture Documentation
 
-## Overview
+System architecture and design overview for FinovaBank.
 
-The FinovaBank platform is designed as a microservices-based digital banking solution, providing services like account management, transactions, loan processing, savings goals, risk assessment, compliance, notifications, and reporting. This document details the architecture, component interactions, technologies used, and deployment considerations.
+## Table of Contents
 
-## High-Level Architecture Diagram
+- [High-Level Architecture](#high-level-architecture)
+- [Microservices Architecture](#microservices-architecture)
+- [Service Communication](#service-communication)
+- [Data Architecture](#data-architecture)
+- [Deployment Architecture](#deployment-architecture)
+- [Technology Stack](#technology-stack)
+
+## High-Level Architecture
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        WEB[Web Frontend<br/>React]
+        MOBILE[Mobile App<br/>React Native]
+    end
+
+    subgraph "API Layer"
+        GATEWAY[API Gateway<br/>:8002]
+    end
+
+    subgraph "Service Discovery"
+        EUREKA[Eureka Server<br/>:8001]
+    end
+
+    subgraph "Core Banking Services"
+        AUTH[Auth Service<br/>:8011]
+        SEC[Security Service<br/>:8089]
+        ACCT[Account Management<br/>:8081]
+        TXN[Transaction Service<br/>:8082]
+        LOAN[Loan Management<br/>:8084]
+        SAVE[Savings Goals<br/>:8088]
+        NOTIF[Notification Service<br/>:8083]
+    end
+
+    subgraph "AI & Analytics"
+        AI[AI Service<br/>:8090<br/>Python/Flask]
+    end
+
+    subgraph "Support Services"
+        COMP[Compliance<br/>:8085]
+        REPORT[Reporting<br/>:8086]
+        RISK[Risk Assessment<br/>:8087]
+    end
+
+    subgraph "Data Layer"
+        POSTGRES[(PostgreSQL)]
+        REDIS[(Redis)]
+        MONGO[(MongoDB)]
+    end
+
+    subgraph "Message Queue"
+        KAFKA[Apache Kafka]
+    end
+
+    subgraph "Monitoring"
+        PROM[Prometheus]
+        GRAF[Grafana]
+    end
+
+    WEB --> GATEWAY
+    MOBILE --> GATEWAY
+    GATEWAY --> EUREKA
+    GATEWAY --> AUTH
+    GATEWAY --> ACCT
+    GATEWAY --> TXN
+    GATEWAY --> AI
+
+    AUTH --> POSTGRES
+    ACCT --> POSTGRES
+    TXN --> POSTGRES
+    LOAN --> POSTGRES
+
+    AUTH --> REDIS
+    GATEWAY --> REDIS
+
+    TXN --> KAFKA
+    NOTIF --> KAFKA
+
+    AI -.-> ACCT
+    AI -.-> TXN
+
+    PROM --> GATEWAY
+    PROM --> AUTH
+    GRAF --> PROM
+```
+
+## Microservices Architecture
+
+### Service Overview
+
+| Service              | Port | Technology           | Database      | Purpose                      |
+| -------------------- | ---- | -------------------- | ------------- | ---------------------------- |
+| Eureka Server        | 8001 | Spring Boot          | N/A           | Service discovery            |
+| API Gateway          | 8002 | Spring Cloud Gateway | Redis (cache) | Routing, auth, rate limiting |
+| Auth Service         | 8011 | Spring Boot          | PostgreSQL    | User authentication          |
+| Security Service     | 8089 | Spring Boot          | PostgreSQL    | Security policies            |
+| Account Management   | 8081 | Spring Boot          | PostgreSQL    | Account CRUD                 |
+| Transaction Service  | 8082 | Spring Boot          | PostgreSQL    | Transaction processing       |
+| Notification Service | 8083 | Spring Boot          | PostgreSQL    | Alerts and notifications     |
+| Loan Management      | 8084 | Spring Boot          | PostgreSQL    | Loan lifecycle               |
+| Compliance Service   | 8085 | Spring Boot          | PostgreSQL    | Regulatory compliance        |
+| Reporting            | 8086 | Spring Boot          | PostgreSQL    | Report generation            |
+| Risk Assessment      | 8087 | Spring Boot          | PostgreSQL    | Risk analysis                |
+| Savings Goals        | 8088 | Spring Boot          | PostgreSQL    | Goal tracking                |
+| AI Service           | 8090 | Python/Flask         | SQLite        | ML models                    |
+| Web Frontend         | 3000 | React/TypeScript     | N/A           | User interface               |
+| Mobile Frontend      | -    | React Native         | N/A           | Mobile UI                    |
+
+### Service Dependencies
 
 ```
-   +--------------------+          +--------------------+
-   |    API Gateway     | <------> | Authentication &   |
-   |  (Spring Gateway)  |          | Authorization      |
-   +--------------------+          +--------------------+
-             |                            |
-   +--------------------+       +-----------------------+
-   |  Eureka Discovery  | <---->|   Config Server       |
-   +--------------------+       +-----------------------+
-             |
-   +-----------------------+
-   |    Service Mesh       |
-   |   (Istio/Kubernetes)  |
-   +-----------------------+
-             |
-     -------------------------
-     |                       |
-+-----------------+   +------------------+   +-------------------+
-| Account Service |   | Transaction       |   | Loan Service      |
-| (Spring Boot)   |   | Service          |   | (Spring Boot)     |
-+-----------------+   +------------------+   +-------------------+
-     |                       |                     |
-+-----------------+   +------------------+   +-------------------+
-| Savings Goal    |   | Risk Assessment  |   | Compliance Service|
-| Service         |   | Service          |   | (Spring Boot)     |
-| (Spring Boot)   |   | (Spring Boot)    |   +-------------------+
-+-----------------+   +------------------+         |
-      |                             |             +---------------------+
-+-----------------+          +-------------------+   Notification Service|
-| Reporting       |          | MongoDB Cluster   |  +---------------------+
-| Service         |          +-------------------+         |
-| (Spring Boot)   |                   |                  +---------------------+
-+-----------------+                 Kafka Cluster       | Grafana/Prometheus  |
-                                        |              +---------------------+
+Eureka Server (no dependencies)
+  ↓
+API Gateway → Eureka
+  ↓
+All Services → Eureka, API Gateway
 ```
 
-## Core Components
+### Module Mapping
 
-### 1. API Gateway
+| Module              | Source Files                   | Key Classes                                                  |
+| ------------------- | ------------------------------ | ------------------------------------------------------------ |
+| Eureka Server       | `backend/eureka-server/`       | `EurekaServerApplication.java`                               |
+| API Gateway         | `backend/api-gateway/`         | `ApiGatewayApplication.java`, `JwtAuthenticationFilter.java` |
+| Auth Service        | `backend/auth-service/`        | `AuthController.java`, `JwtTokenProvider.java`               |
+| Account Management  | `backend/account-management/`  | `AccountController.java`, `AccountServiceImpl.java`          |
+| Transaction Service | `backend/transaction-service/` | `TransactionController.java`, `TransactionServiceImpl.java`  |
+| AI Service          | `backend/ai-service/src/`      | `main.py`, `fraud_detection.py`, `recommendations.py`        |
+| Web Frontend        | `web-frontend/src/`            | `Dashboard.tsx`, `Login.tsx`, `AccountDetails.tsx`           |
 
-- **Technology**: Spring Cloud Gateway
-- **Purpose**: Acts as a single entry point for all requests, routes traffic to appropriate microservices, handles cross-cutting concerns like authentication, rate-limiting, and logging.
+## Service Communication
 
-### 2. Service Registry and Discovery
+### Synchronous Communication
 
-- **Technology**: Eureka
-- **Purpose**: Service discovery to locate instances of microservices dynamically, enabling easier scaling and failure recovery.
+Services communicate via REST APIs through the API Gateway:
 
-### 3. Config Server
+```
+Client → API Gateway → Service Discovery (Eureka) → Target Service
+```
 
-- **Technology**: Spring Cloud Config
-- **Purpose**: Provides centralized configuration management for all microservices.
+**Example Flow:**
 
-### 4. Microservices
+1. Client sends request to API Gateway (e.g., `POST /api/auth/login`)
+2. Gateway validates JWT (if required)
+3. Gateway queries Eureka for service instances
+4. Gateway load-balances request to available instance
+5. Service processes request
+6. Response flows back through Gateway to Client
 
-Each of the following services is implemented using **Spring Boot**:
+### Asynchronous Communication
 
-#### a. Account Management Service
+Event-driven communication via Kafka:
 
-- Handles user account creation, updates, and account status.
-- **Data Storage**: PostgreSQL for relational data.
+**Topics:**
 
-#### b. Transaction Service
+- `transaction-events` - Transaction notifications
+- `account-events` - Account changes
+- `notification-events` - User notifications
+- `fraud-alerts` - Security alerts
 
-- Manages financial transactions between accounts, including deposits and withdrawals.
-- **Data Storage**: PostgreSQL for transaction records.
+**Example:**
 
-#### c. Loan Service
+```java
+// Publisher (Transaction Service)
+kafkaTemplate.send("transaction-events", transactionEvent);
 
-- Handles loan applications, approvals, and repayment tracking.
-- **Data Storage**: PostgreSQL.
+// Consumer (Notification Service)
+@KafkaListener(topics = "transaction-events")
+public void handleTransaction(TransactionEvent event) {
+    sendNotification(event);
+}
+```
 
-#### d. Savings Goals Service
+## Data Architecture
 
-- Allows users to create and track savings goals.
-- **Data Storage**: MongoDB.
+### Database Schema Design
 
-#### e. Risk Assessment Service
+Each microservice has its own database (database-per-service pattern):
 
-- Evaluates risk factors for loan applications.
-- **Data Storage**: PostgreSQL.
+**Auth Service Database:**
 
-#### f. Compliance Service
+```sql
+users (id, username, email, password_hash, created_at)
+roles (id, name)
+user_roles (user_id, role_id)
+```
 
-- Monitors transactions and account activities for adherence to compliance standards (e.g., AML).
-- **Data Storage**: PostgreSQL.
+**Account Management Database:**
 
-#### g. Notification Service
+```sql
+accounts (id, user_id, account_number, type, balance, currency, status)
+account_history (id, account_id, balance, timestamp)
+```
 
-- Sends email and SMS notifications related to account activities, loan status, etc.
-- **Queueing System**: Kafka for event-driven notifications.
+**Transaction Service Database:**
 
-#### h. Reporting Service
+```sql
+transactions (id, source_account_id, dest_account_id, amount, type, status, created_at)
+```
 
-- Provides periodic financial reports for users and administrators.
-- **Data Storage**: MongoDB for document-oriented reporting data.
+### Data Flow
 
-## Data Flow and Communication
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway
+    participant AuthService
+    participant AccountService
+    participant TransactionService
+    participant Kafka
+    participant NotificationService
 
-- **Request Flow**: All client requests pass through the **API Gateway**, which authenticates the user and routes the requests to the appropriate microservice.
-- **Service-to-Service Communication**: Most services communicate synchronously using **REST API calls**. Some event-driven communication happens through **Kafka**, especially for notifications and compliance checks.
+    Client->>Gateway: Transfer Request
+    Gateway->>AuthService: Validate JWT
+    AuthService->>Gateway: Token Valid
+    Gateway->>TransactionService: Create Transaction
+    TransactionService->>AccountService: Debit Source
+    AccountService->>TransactionService: Success
+    TransactionService->>AccountService: Credit Destination
+    AccountService->>TransactionService: Success
+    TransactionService->>Kafka: Publish Event
+    Kafka->>NotificationService: Transaction Event
+    NotificationService->>Client: Send Notification
+    TransactionService->>Gateway: Transaction Complete
+    Gateway->>Client: Success Response
+```
 
-## Service Mesh
+### Caching Strategy
 
-- **Technology**: Istio (running in Kubernetes)
-- **Purpose**: Manages communication between services for observability, security (mutual TLS), and traffic management.
+**Redis Cache:**
 
-## Database
+- JWT tokens (blacklist for logout)
+- Session data
+- Frequently accessed account balances
+- User profiles
+- API rate limiting counters
 
-- **Relational Data**: **PostgreSQL** is used for transaction records, account details, loan information, and other structured data.
-- **Document-Oriented Data**: **MongoDB** is used to manage document-based data for reporting and savings goals.
+**Cache TTL:**
+
+- User sessions: 1 hour
+- Account balances: 5 minutes
+- User profiles: 30 minutes
+- Rate limit counters: 1 minute
 
 ## Deployment Architecture
 
-- **Containerization**: All services are containerized using **Docker**.
-- **Orchestration**: Services are deployed using **Kubernetes**, with each microservice running in its own pod, managed through **Helm** charts.
-- **Load Balancer**: Requests are distributed across multiple instances of the same service using **Kubernetes' LoadBalancer**.
+### Docker Compose (Development)
 
-## Security
+```yaml
+Services:
+  - eureka-server (1 instance)
+  - api-gateway (1 instance)
+  - All backend services (1 instance each)
+  - web-frontend (1 instance)
+  - prometheus (1 instance)
+  - grafana (1 instance)
 
-- **Encryption**: **AES-256** is used for encrypting sensitive data.
-- **Authentication**: **OAuth2** is used for securing APIs.
-- **Authorization**: Role-based access control (RBAC) is applied for determining user permissions.
-- **Secrets Management**: **HashiCorp Vault** is used to manage sensitive information like database credentials and API keys.
+Networks:
+  - finova-network (bridge)
 
-## Observability
+Volumes:
+  - grafana-storage (persistent)
+```
 
-- **Monitoring**: **Prometheus** collects metrics from each service.
-- **Dashboards**: **Grafana** is used to visualize metrics and track system health.
-- **Logging**: **ELK Stack** (Elasticsearch, Logstash, Kibana) collects and visualizes application logs for debugging and monitoring.
+### Kubernetes (Production)
 
-## Scalability and Resilience
+```
+Namespace: finovabank
 
-- **Auto-Scaling**: **Kubernetes HPA (Horizontal Pod Autoscaler)** scales services based on CPU/memory usage.
-- **Failover**: Multiple replicas of services are deployed to avoid single points of failure.
-- **Load Balancing**: Requests are balanced across multiple instances to ensure high availability.
+Deployments:
+  - Each service: 2-3 replicas
+  - Auto-scaling enabled
+  - Resource limits enforced
 
-## Technologies Summary
+Services:
+  - ClusterIP for internal services
+  - LoadBalancer for API Gateway
+  - NodePort for monitoring
 
-- **Backend Framework**: Spring Boot
-- **API Gateway**: Spring Cloud Gateway
-- **Service Discovery**: Eureka
-- **Config Management**: Spring Cloud Config
-- **Service Mesh**: Istio
-- **Database**: PostgreSQL, MongoDB
-- **Messaging**: Kafka
-- **Containerization**: Docker
-- **Orchestration**: Kubernetes
-- **Secrets Management**: HashiCorp Vault
-- **Monitoring**: Prometheus, Grafana
-- **Logging**: ELK Stack (Elasticsearch, Logstash, Kibana)
+Ingress:
+  - NGINX Ingress Controller
+  - TLS termination
+  - Path-based routing
 
----
+ConfigMaps:
+  - Application configuration
+  - Environment variables
 
-This concludes the architectural documentation for the FinovaBank platform. Let me know if you need any further details or have any questions.
+Secrets:
+  - Database credentials
+  - JWT secrets
+  - API keys
+```
+
+### Cloud Architecture (AWS)
+
+```
+Region: us-east-1
+
+Compute:
+  - EKS Cluster (managed Kubernetes)
+  - EC2 instances (worker nodes)
+  - Auto Scaling Groups
+
+Database:
+  - RDS PostgreSQL (Multi-AZ)
+  - ElastiCache Redis
+  - DocumentDB (MongoDB compatible)
+
+Storage:
+  - S3 (backups, logs)
+  - EBS (persistent volumes)
+
+Networking:
+  - VPC with public/private subnets
+  - Application Load Balancer
+  - Route53 (DNS)
+
+Security:
+  - IAM roles and policies
+  - Security Groups
+  - AWS WAF
+```
+
+## Technology Stack
+
+### Backend
+
+| Component         | Technology           | Version  | Purpose                      |
+| ----------------- | -------------------- | -------- | ---------------------------- |
+| Language          | Java                 | 17       | Main application language    |
+| Framework         | Spring Boot          | 2.7.14   | Microservices framework      |
+| Cloud             | Spring Cloud         | 2021.0.8 | Microservices patterns       |
+| Service Discovery | Netflix Eureka       | -        | Service registry             |
+| API Gateway       | Spring Cloud Gateway | -        | Routing and filtering        |
+| Security          | Spring Security      | -        | Authentication/authorization |
+| Data Access       | Spring Data JPA      | -        | Database ORM                 |
+| Database          | PostgreSQL           | 42.6.0   | Primary database             |
+| Cache             | Redis                | -        | Distributed cache            |
+| Messaging         | Apache Kafka         | 3.5.1    | Event streaming              |
+| Validation        | Hibernate Validator  | -        | Input validation             |
+| Documentation     | Springdoc OpenAPI    | 1.7.0    | API documentation            |
+| Build Tool        | Maven                | 3.6+     | Dependency management        |
+
+### AI/ML
+
+| Component       | Technology   | Version |
+| --------------- | ------------ | ------- |
+| Language        | Python       | 3.8+    |
+| Web Framework   | Flask        | 3.1.1   |
+| ML Library      | scikit-learn | 1.7.1   |
+| Data Processing | pandas       | 2.3.2   |
+| Numerical       | numpy        | 2.3.2   |
+| Database        | SQLAlchemy   | 2.0.41  |
+
+### Frontend
+
+| Component        | Technology       | Version |
+| ---------------- | ---------------- | ------- |
+| Web Framework    | React            | 18.3.1  |
+| Language         | TypeScript       | 4.9.5   |
+| UI Library       | Material-UI      | 5.15.21 |
+| State Management | Redux Toolkit    | -       |
+| Routing          | React Router     | 6.24.1  |
+| Forms            | Formik           | 2.4.6   |
+| Validation       | Yup              | 1.4.0   |
+| Charts           | Chart.js         | 4.4.3   |
+| HTTP Client      | Axios            | 1.7.2   |
+| Mobile           | React Native     | 0.72.17 |
+| Navigation       | React Navigation | 7.1.6   |
+
+### DevOps
+
+| Component         | Technology     | Purpose                     |
+| ----------------- | -------------- | --------------------------- |
+| Containerization  | Docker         | Container runtime           |
+| Orchestration     | Kubernetes     | Container orchestration     |
+| CI/CD             | GitHub Actions | Automation pipeline         |
+| IaC               | Terraform      | Infrastructure provisioning |
+| Config Management | Ansible        | Server configuration        |
+| Monitoring        | Prometheus     | Metrics collection          |
+| Visualization     | Grafana        | Metrics dashboards          |
+| Logging           | ELK Stack      | Log aggregation             |
+| Registry          | Docker Hub     | Container images            |
+
+## Design Patterns
+
+### Microservices Patterns
+
+1. **Service Discovery** - Eureka for dynamic service registration
+2. **API Gateway** - Single entry point for all clients
+3. **Circuit Breaker** - Resilience4j for fault tolerance
+4. **Database per Service** - Each service owns its data
+5. **Event-Driven** - Kafka for async communication
+6. **CQRS** - Separate read/write models where needed
+7. **Saga** - Distributed transactions
+
+### Code Patterns
+
+- **Repository Pattern** - Data access abstraction
+- **Service Layer** - Business logic separation
+- **DTO Pattern** - Data transfer objects
+- **Builder Pattern** - Object construction
+- **Factory Pattern** - Object creation
+- **Strategy Pattern** - Algorithm selection
+- **Observer Pattern** - Event notification
+
+## Security Architecture
+
+### Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway
+    participant AuthService
+    participant Redis
+
+    Client->>Gateway: Login Request
+    Gateway->>AuthService: Forward Credentials
+    AuthService->>AuthService: Validate Credentials
+    AuthService->>AuthService: Generate JWT
+    AuthService->>Redis: Cache Session
+    AuthService->>Gateway: Return JWT
+    Gateway->>Client: JWT Token
+
+    Client->>Gateway: API Request + JWT
+    Gateway->>Gateway: Validate JWT
+    Gateway->>Redis: Check Blacklist
+    Gateway->>Service: Forward Request
+```
+
+### Security Layers
+
+1. **Network Layer** - VPC, Security Groups, WAF
+2. **Transport Layer** - TLS 1.3 encryption
+3. **API Layer** - JWT authentication, rate limiting
+4. **Service Layer** - Authorization, input validation
+5. **Data Layer** - Encryption at rest, field-level encryption
+
+## Performance Considerations
+
+### Scalability
+
+- **Horizontal Scaling** - Add more service instances
+- **Vertical Scaling** - Increase instance resources
+- **Database Scaling** - Read replicas, sharding
+- **Caching** - Redis for frequently accessed data
+- **CDN** - Static assets delivery
+
+### Optimization
+
+- **Connection Pooling** - HikariCP (20 max connections)
+- **Lazy Loading** - JPA fetch strategies
+- **Async Processing** - Kafka for non-blocking operations
+- **Pagination** - Limit query results
+- **Indexing** - Database query optimization
+
+## Monitoring and Observability
+
+### Metrics
+
+- **Application Metrics** - Micrometer + Prometheus
+- **Business Metrics** - Transaction volume, user activity
+- **Infrastructure Metrics** - CPU, memory, disk, network
+
+### Logging
+
+- **Structured Logging** - JSON format
+- **Log Levels** - DEBUG, INFO, WARN, ERROR
+- **Centralized Logging** - ELK Stack
+- **Log Correlation** - Trace IDs across services
+
+### Tracing
+
+- **Distributed Tracing** - Spring Cloud Sleuth
+- **Trace Propagation** - HTTP headers
+- **Span Collection** - Zipkin (planned)
+
+## See Also
+
+- [INSTALLATION.md](INSTALLATION.md) - Setup instructions
+- [CONFIGURATION.md](CONFIGURATION.md) - Configuration guide
+- [FEATURE_MATRIX.md](FEATURE_MATRIX.md) - Feature overview
+- [API.md](API.md) - API reference
