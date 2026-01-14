@@ -1,4 +1,6 @@
-
+# ===============================================================
+# FinovaBank .gitignore
+# ===============================================================
 # General
 *.log
 *.tmp
@@ -146,10 +148,6 @@ terraform.rc
 # Large data files (consider Git LFS if needed)
 /resources/datasets/*.csv
 
-# Specific project files
-git-auto-commit.sh
-
-
 # Additional IDE/Editor Metadata
 *.iml
 .project
@@ -199,6 +197,3 @@ Desktop.ini
 *.pyc
 *.whl
 *.egg
-
-# Specific project files
-git-auto-commit.sh
