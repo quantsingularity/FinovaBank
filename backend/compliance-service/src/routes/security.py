@@ -1,9 +1,8 @@
-import hashlib
 import logging
 import re
 import secrets
 from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from flask import Blueprint, jsonify, request
 
@@ -289,9 +288,9 @@ class SecurityMonitor:
         risk_score = 0
 
         endpoint = api_data.get("endpoint", "")
-        method = api_data.get("method", "")
+        api_data.get("method", "")
         ip_address = api_data.get("ip_address", "")
-        user_id = api_data.get("user_id", "")
+        api_data.get("user_id", "")
         response_code = api_data.get("response_code", 200)
 
         # Check for rate limiting violations

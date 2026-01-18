@@ -1,10 +1,8 @@
 import logging
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, Dict, List
 
-import numpy as np
-import pandas as pd
 from flask import Blueprint, jsonify, request
 
 recommendations_bp = Blueprint("recommendations", __name__)
@@ -146,7 +144,7 @@ class RecommendationEngine:
         # Basic demographics
         age = customer_data.get("age", 30)
         income = customer_data.get("annual_income", 50000)
-        employment_status = customer_data.get("employment_status", "employed")
+        customer_data.get("employment_status", "employed")
 
         # Financial data
         current_savings = customer_data.get("current_savings", 0)
@@ -213,7 +211,7 @@ class RecommendationEngine:
         recommendations = []
 
         # Get customer characteristics
-        life_stage = customer_profile.get("life_stage", "early_career")
+        customer_profile.get("life_stage", "early_career")
         risk_tolerance = customer_profile.get("risk_tolerance", "medium")
         financial_health = customer_profile.get("financial_health", {})
         current_products = customer_profile.get("current_products", [])

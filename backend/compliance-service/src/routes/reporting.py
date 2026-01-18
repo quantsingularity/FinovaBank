@@ -1,7 +1,6 @@
-import json
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from flask import Blueprint, jsonify, request
 
@@ -212,7 +211,7 @@ class ComplianceReporter:
 
         transactions = financial_data.get("transactions", [])
         reconciliations = financial_data.get("reconciliations", [])
-        journal_entries = financial_data.get("journal_entries", [])
+        financial_data.get("journal_entries", [])
 
         # Analyze transaction controls
         transaction_issues = []

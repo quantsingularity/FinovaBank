@@ -1,10 +1,9 @@
 import logging
 import math
-from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from datetime import datetime
+from typing import Any, Dict
 
 import numpy as np
-import pandas as pd
 from flask import Blueprint, jsonify, request
 
 risk_bp = Blueprint("risk", __name__)

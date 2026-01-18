@@ -1,11 +1,8 @@
 import logging
-import os
-from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from datetime import datetime
+from typing import Dict, List
 
-import joblib
 import numpy as np
-import pandas as pd
 from flask import Blueprint, jsonify, request
 
 fraud_bp = Blueprint("fraud", __name__)

@@ -1,7 +1,5 @@
-import json
 import logging
-from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, Dict, List
 
 import numpy as np
@@ -121,7 +119,7 @@ class AnalyticsEngine:
         if not customers:
             return {"error": "No customer data provided"}
 
-        df = pd.DataFrame(customers)
+        pd.DataFrame(customers)
 
         # RFM Analysis (Recency, Frequency, Monetary)
         current_date = datetime.now()
@@ -334,7 +332,7 @@ class AnalyticsEngine:
         df = pd.DataFrame(product_data)
 
         # Revenue analysis by product
-        revenue_by_product = df.groupby("product_type")["revenue"].sum().to_dict()
+        df.groupby("product_type")["revenue"].sum().to_dict()
         customer_count_by_product = (
             df.groupby("product_type")["customer_id"].nunique().to_dict()
         )

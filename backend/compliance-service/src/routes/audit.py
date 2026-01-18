@@ -3,7 +3,7 @@ import json
 import logging
 import uuid
 from datetime import datetime, timedelta
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from flask import Blueprint, jsonify, request
 
