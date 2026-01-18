@@ -31,7 +31,7 @@ This is the web frontend for the FinovaBank application, a modern and responsive
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/abrar2030/FinovaBank.git
+    git clone https://github.com/quantsingularity/FinovaBank.git
     ```
 2.  Navigate to the `web-frontend` directory:
     ```bash

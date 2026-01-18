@@ -43,7 +43,7 @@ git clone https://github.com/YOUR_USERNAME/FinovaBank.git
 cd FinovaBank
 
 # Add upstream remote
-git remote add upstream https://github.com/abrar2030/FinovaBank.git
+git remote add upstream https://github.com/quantsingularity/FinovaBank.git
 ```
 
 ### Setup Development Environment

@@ -24,7 +24,7 @@ FinovaBank is a microservices-based digital banking platform built with Java Spr
 1. **Clone and setup environment**
 
    ```bash
-   git clone https://github.com/abrar2030/FinovaBank.git
+   git clone https://github.com/quantsingularity/FinovaBank.git
    cd FinovaBank
    cp .env.example .env
    ```

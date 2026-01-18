@@ -22,7 +22,7 @@ The `values.yaml` file is the primary configuration source.
 | Parameter                               | Description                                                   | Default Value             |
 | :-------------------------------------- | :------------------------------------------------------------ | :------------------------ |
 | `replicaCount`                          | Global default number of pod replicas for all services.       | `1`                       |
-| `image.repository`                      | The base Docker image repository.                             | `abrar2030/finovabackend` |
+| `image.repository`                      | The base Docker image repository.                             | `quantsingularity/finovabackend` |
 | `image.tag`                             | Global default image tag for all services.                    | `latest`                  |
 | `environment.API_BASE_URL`              | The base URL for the API Gateway, used by other services.     | `http://api-gateway:8002` |
 | `resources`                             | Global default resource requests and limits for all services. | (See `values.yaml`)       |

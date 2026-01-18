@@ -1,7 +1,7 @@
 # FinovaBank
 
-![CI/CD Status](https://img.shields.io/github/actions/workflow/status/abrar2030/FinovaBank/cicd.yml?branch=main&label=CI/CD&logo=github)
-[![Test Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)](https://github.com/abrar2030/FinovaBank/actions)
+![CI/CD Status](https://img.shields.io/github/actions/workflow/status/quantsingularity/FinovaBank/cicd.yml?branch=main&label=CI/CD&logo=github)
+[![Test Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)](https://github.com/quantsingularity/FinovaBank/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## 🏦 Digital Banking Platform with AI & Blockchain
@@ -220,7 +220,7 @@ FinovaBank/
 
 ```bash
 # Clone the repository
-git clone https://github.com/abrar2030/FinovaBank.git
+git clone https://github.com/quantsingularity/FinovaBank.git
 cd FinovaBank
 
 # Run the setup script
@@ -235,7 +235,7 @@ cd FinovaBank
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/abrar2030/FinovaBank.git
+git clone https://github.com/quantsingularity/FinovaBank.git
 cd FinovaBank
 ```
 

@@ -5,8 +5,8 @@ services:
     image: mongo:4.4
     container_name: account-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27018:27017"
     volumes:
@@ -17,8 +17,8 @@ services:
     image: mongo:4.4
     container_name: transaction-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27019:27017"
     volumes:
@@ -29,8 +29,8 @@ services:
     image: mongo:4.4
     container_name: loan-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27020:27017"
     volumes:
@@ -41,8 +41,8 @@ services:
     image: mongo:4.4
     container_name: savings-goals-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27021:27017"
     volumes:
@@ -53,8 +53,8 @@ services:
     image: mongo:4.4
     container_name: risk-assessment-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27022:27017"
     volumes:
@@ -65,8 +65,8 @@ services:
     image: mongo:4.4
     container_name: compliance-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27023:27017"
     volumes:
@@ -77,8 +77,8 @@ services:
     image: mongo:4.4
     container_name: notification-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27024:27017"
     volumes:
@@ -89,8 +89,8 @@ services:
     image: mongo:4.4
     container_name: reporting-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: abrar2030
-      MONGO_INITDB_ROOT_PASSWORD: abrar2030
+      MONGO_INITDB_ROOT_USERNAME: quantsingularity
+      MONGO_INITDB_ROOT_PASSWORD: quantsingularity
     ports:
       - "27025:27017"
     volumes:

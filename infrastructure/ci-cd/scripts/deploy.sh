@@ -6,7 +6,7 @@
 set -e
 
 # Set Docker registry from environment variable or use default
-DOCKER_REGISTRY=${DOCKER_USERNAME:-abrar2030}
+DOCKER_REGISTRY=${DOCKER_USERNAME:-quantsingularity}
 IMAGE_REPO="finovabackend"
 
 # List of all backend microservices

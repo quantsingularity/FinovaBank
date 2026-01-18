@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  repository: abrar2030/finovabackend
+  repository: quantsingularity/finovabackend
   tag: "latest"
   pullPolicy: IfNotPresent
 service:

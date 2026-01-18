@@ -8,10 +8,10 @@
 # to their respective Docker Hub repositories.
 #
 # Frontend Service:
-#   - Image pushed to abrar2030/frontend:latest
+#   - Image pushed to quantsingularity/frontend:latest
 #
 # Backend Services:
-#   - Images pushed to abrar2030/backend-<service>:latest
+#   - Images pushed to quantsingularity/backend-<service>:latest
 #
 # Usage:
 #   ./docker-auto-build-push.sh

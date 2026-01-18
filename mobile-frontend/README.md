@@ -26,7 +26,7 @@ A comprehensive React Native mobile application for FinovaBank's digital banking
 1. **Clone the repository** (if not already done):
 
    ```bash
-   git clone https://github.com/abrar2030/FinovaBank.git
+   git clone https://github.com/quantsingularity/FinovaBank.git
    cd FinovaBank/mobile-frontend
    ```
 

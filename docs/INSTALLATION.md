@@ -60,7 +60,7 @@ This is the fastest way to get FinovaBank running.
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/abrar2030/FinovaBank.git
+git clone https://github.com/quantsingularity/FinovaBank.git
 cd FinovaBank
 ```
 
