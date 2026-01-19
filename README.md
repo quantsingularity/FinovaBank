@@ -33,6 +33,24 @@ FinovaBank is a modern digital banking platform that combines traditional bankin
 
 FinovaBank is a comprehensive digital banking platform designed to provide a seamless banking experience for customers while leveraging modern technologies to enhance security, efficiency, and personalization. The platform offers traditional banking services alongside innovative features powered by AI and blockchain technology.
 
+## Project Structure
+
+The project is organized into several main components:
+
+```
+FinovaBank/
+├── backend/                # Core backend logic, services, and shared utilities
+├── docs/                   # Project documentation
+├── infrastructure/         # DevOps, deployment, and infra-related code
+├── mobile-frontend/        # Mobile application
+├── web-frontend/           # Web dashboard
+├── scripts/                # Automation, setup, and utility scripts
+├── LICENSE                 # License information
+├── README.md               # Project overview and instructions
+├── eslint.config.js        # ESLint configuration
+└── package.json            # Node.js project metadata and dependencies
+```
+
 ## Key Features
 
 ### Core Banking Services
