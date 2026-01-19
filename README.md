@@ -17,6 +17,7 @@ FinovaBank is a modern digital banking platform that combines traditional bankin
 ## Table of Contents
 
 - [Overview](#overview)
+- [Project Structure](#project-structure)
 - [Key Features](#key-features)
 - [Technology Stack](#technology-stack)
 - [Security Measures](#security-measures)
