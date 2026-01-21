@@ -410,22 +410,18 @@ FinovaBank uses GitHub Actions for continuous integration and deployment:
 
 ## Documentation
 
-| Document                    | Path                 | Description                                                            |
-| :-------------------------- | :------------------- | :--------------------------------------------------------------------- |
-| **README**                  | `README.md`          | High-level overview, project scope, and repository entry point         |
-| **Quickstart Guide**        | `QUICKSTART.md`      | Fast-track guide to get the system running with minimal setup          |
-| **Installation Guide**      | `INSTALLATION.md`    | Step-by-step installation and environment setup                        |
-| **Deployment Guide**        | `DEPLOYMENT.md`      | Deployment procedures, environments, and operational considerations    |
-| **API Reference**           | `API.md`             | Detailed documentation for all API endpoints                           |
-| **CLI Reference**           | `CLI.md`             | Command-line interface usage, commands, and examples                   |
-| **User Guide**              | `USAGE.md`           | Comprehensive end-user guide, workflows, and examples                  |
-| **Architecture Overview**   | `ARCHITECTURE.md`    | System architecture, components, and design rationale                  |
-| **Configuration Guide**     | `CONFIGURATION.md`   | Configuration options, environment variables, and tuning               |
-| **Feature Matrix**          | `FEATURE_MATRIX.md`  | Feature coverage, capabilities, and roadmap alignment                  |
-| **Smart Contracts**         | `SMART_CONTRACTS.md` | Smart contract architecture, interfaces, and security considerations   |
-| **Security Guide**          | `SECURITY.md`        | Security model, threat assumptions, and responsible disclosure process |
-| **Contributing Guidelines** | `CONTRIBUTING.md`    | Contribution workflow, coding standards, and PR requirements           |
-| **Troubleshooting**         | `TROUBLESHOOTING.md` | Common issues, diagnostics, and remediation steps                      |
+| Document                    | Path                 | Description                                                    |
+| :-------------------------- | :------------------- | :------------------------------------------------------------- |
+| **README**                  | `README.md`          | High-level overview, project scope, and repository entry point |
+| **Installation Guide**      | `INSTALLATION.md`    | Step-by-step installation and environment setup                |
+| **API Reference**           | `API.md`             | Detailed documentation for all API endpoints                   |
+| **CLI Reference**           | `CLI.md`             | Command-line interface usage, commands, and examples           |
+| **User Guide**              | `USAGE.md`           | Comprehensive end-user guide, workflows, and examples          |
+| **Architecture Overview**   | `ARCHITECTURE.md`    | System architecture, components, and design rationale          |
+| **Configuration Guide**     | `CONFIGURATION.md`   | Configuration options, environment variables, and tuning       |
+| **Feature Matrix**          | `FEATURE_MATRIX.md`  | Feature coverage, capabilities, and roadmap alignment          |
+| **Contributing Guidelines** | `CONTRIBUTING.md`    | Contribution workflow, coding standards, and PR requirements   |
+| **Troubleshooting**         | `TROUBLESHOOTING.md` | Common issues, diagnostics, and remediation steps              |
 
 ## Contributing
 
