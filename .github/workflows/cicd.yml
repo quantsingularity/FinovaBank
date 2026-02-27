@@ -46,62 +46,71 @@ jobs:
           done
 
       # -------------------------------
-      # Node + Prettier Setup
+      # Node + npm caching
       # -------------------------------
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: tools/package-lock.json # ← tells the action where the lock file lives
 
-      # Install Node dependencies (root)
-      - name: Install Node Dependencies
-        working-directory: .
+      - name: Install Node dependencies
+        working-directory: tools # ← run npm ci from tools/
         run: npm ci
 
-      # Prettier: web-frontend
+      # -------------------------------
+      # Prettier checks
+      # -------------------------------
+
+      # 1) Web frontend
       - name: Run Prettier Checks (web-frontend)
-        working-directory: .
+        if: ${{ env.WEB_FRONTEND_DIR != '' }}
+        working-directory: tools # ← run npx from tools/
         run: |
           echo "=== Running Prettier (web-frontend) ==="
-          ./node_modules/.bin/prettier --check "web-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+          npx --no-install prettier --check "../${{ env.WEB_FRONTEND_DIR }}/**/*.{js,jsx,ts,tsx,json,html,css,md}" --ignore-path ../.prettierignore || {
+            echo "Prettier issues found in ${WEB_FRONTEND_DIR}."
+            exit 1
+          }
 
-      # Prettier: mobile-frontend
+      # 2) Mobile frontend
       - name: Run Prettier Checks (mobile-frontend)
-        working-directory: .
+        if: ${{ env.MOBILE_FRONTEND_DIR != '' }}
+        working-directory: tools
         run: |
           echo "=== Running Prettier (mobile-frontend) ==="
-          ./node_modules/.bin/prettier --check "mobile-frontend/**/*.{js,jsx,ts,tsx,json,html,css,md}"
+          npx --no-install prettier --check "../${{ env.MOBILE_FRONTEND_DIR }}/**/*.{js,jsx,ts,tsx,json,html,css,md}" --ignore-path ../.prettierignore || {
+            echo "Prettier issues found in ${MOBILE_FRONTEND_DIR}."
+            exit 1
+          }
 
-      # -------------------------------
-      # New: Repository-wide Markdown check (ALL .md files)
-      # -------------------------------
+      # 3) Repository-wide Markdown check (ALL .md files)
       - name: Run Prettier Checks (all .md files in repo)
-        working-directory: .
+        working-directory: tools
         run: |
           echo "=== Running Prettier (all .md files) ==="
-          ./node_modules/.bin/prettier --check "**/*.md" || {
+          npx --no-install prettier --check "../**/*.md" --ignore-path ../.prettierignore || {
             echo "Prettier formatting issues detected in markdown files across the repo."
             exit 1
           }
 
-      # -------------------------------
-      # New: Infrastructure directory YAML/YML check (infrastructure/*.yml, *.yaml)
-      # -------------------------------
-      - name: Run Prettier Checks (infrastructure YAML/YML files)
-        working-directory: .
+      # 4) Infrastructure YAML/YML files only (uses env.INFRASTRUCTURE_DIR)
+      - name: Run Prettier Checks (infrastructure YAML)
+        working-directory: tools
         run: |
-          if [ -n "${{ env.INFRASTRUCTURE_DIR }}" ] && [ -d "${{ env.INFRASTRUCTURE_DIR }}" ]; then
+          if [ -n "${{ env.INFRASTRUCTURE_DIR }}" ] && [ -d "../${{ env.INFRASTRUCTURE_DIR }}" ]; then
             echo "=== Running Prettier (infrastructure YAML/YML files) in ${INFRASTRUCTURE_DIR} ==="
-            ./node_modules/.bin/prettier --check "${{ env.INFRASTRUCTURE_DIR }}/**/*.{yml,yaml}" || {
+            npx --no-install prettier --check "../${{ env.INFRASTRUCTURE_DIR }}/**/*.{yml,yaml}" --ignore-path ../.prettierignore || {
               echo "Prettier formatting issues detected in ${INFRASTRUCTURE_DIR} YAML/YML files."
               exit 1
             }
           else
-            echo "No infrastructure directory '${{ env.INFRASTRUCTURE_DIR }}' found — skipping infra YAML/YML checks."
+            echo "No infrastructure directory '${{ env.INFRASTRUCTURE_DIR }}' found or INFRASTRUCTURE_DIR unset — skipping infra YAML checks."
           fi
 
       # -------------------------------
-      # Done
+      # Finalize
       # -------------------------------
       - name: Finalize Check
         run: echo "All formatting checks completed successfully."
