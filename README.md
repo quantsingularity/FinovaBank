@@ -48,8 +48,7 @@ FinovaBank/
 ├── scripts/                # Automation, setup, and utility scripts
 ├── LICENSE                 # License information
 ├── README.md               # Project overview and instructions
-├── eslint.config.js        # ESLint configuration
-└── package.json            # Node.js project metadata and dependencies
+└── tools/                  # Formatter configs, linting tools, and dev utilities
 ```
 
 ## Key Features
