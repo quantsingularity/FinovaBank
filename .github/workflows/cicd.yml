@@ -53,10 +53,10 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: tools/package-lock.json # ← tells the action where the lock file lives
+          cache-dependency-path: tools/package-lock.json
 
       - name: Install Node dependencies
-        working-directory: tools # ← run npm ci from tools/
+        working-directory: tools
         run: npm ci
 
       # -------------------------------
@@ -66,7 +66,7 @@ jobs:
       # 1) Web frontend
       - name: Run Prettier Checks (web-frontend)
         if: ${{ env.WEB_FRONTEND_DIR != '' }}
-        working-directory: tools # ← run npx from tools/
+        working-directory: tools
         run: |
           echo "=== Running Prettier (web-frontend) ==="
           npx --no-install prettier --check "../${{ env.WEB_FRONTEND_DIR }}/**/*.{js,jsx,ts,tsx,json,html,css,md}" --ignore-path ../.prettierignore || {
@@ -95,7 +95,7 @@ jobs:
             exit 1
           }
 
-      # 4) Infrastructure YAML/YML files only (uses env.INFRASTRUCTURE_DIR)
+      # 4) Infrastructure YAML/YML files only
       - name: Run Prettier Checks (infrastructure YAML)
         working-directory: tools
         run: |
